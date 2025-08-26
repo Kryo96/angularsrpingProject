@@ -224,3 +224,30 @@ Per poi poterlo usare come Oggetto in :
     {codart : "057549001", descrizione : "FINDUS CROCCOLE 400 GR", um : "PZ", pzcart : 12, peso : 0.4, prezzo : 5.97, active : true, data : new Date()}
   ]
 ```
+
+
+##### Moduli
+
+I moduli in angular sono un insieme di servizi, direttive, componenti e altri elementi correlati, suddividendo in modo intelligente per organizzare il codice. Inoltre un un modulo può esporre un interfaccia per poter permettere la comunicazione con altri moduli. 
+
+I moduli di angular sono costituiti principalmente da <span class="red">modulo radice</span> e i _moduli feature_. Il modulo root viene creato in auto, durante la creazione di un progetto angular.
+
+
+##### Generare Modulo Core
+
+Per generare un nuovo modulo, e un modulo non un componente, basterà cambiare il comando eseguito per la generazione di componenti così
+
+```shell
+ng g module core
+```
+
+Per poi creare un component rilegato al modulo appena creato: 
+
+```shell
+ng g component header --path=src/app/core --module=core --export 
+```
+
+da notare come venga specificato il path del modulo custom, il nome del modulo core, da notare anche il flag export che indica l'esposizione verso moduli esterni. 
+per aggiungere poi i nostri componenti all'interno della pagina visualizzata, basterà aggiungerli al mostro app.component.html, e l'header e il footer saranno gli elementi fissi della nostra single page application. 
+
+Note: credo che il punto di questa sigla sia proprio il fatto che SPA intenda che effettivamente la pagina sia sempre la stessa ma cambino i componenti all'interno della pagina, e che ci siano invece delle componenti fisse che rimangono, come ad esempio la navbar e il footer.
