@@ -1,5 +1,4 @@
 export interface IArticoli {
-
   codart: string
   descrizione: string
   um: string
@@ -8,5 +7,4 @@ export interface IArticoli {
   prezzo: number
   active: boolean
   data: Date
-  
 }

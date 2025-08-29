@@ -251,3 +251,16 @@ da notare come venga specificato il path del modulo custom, il nome del modulo c
 per aggiungere poi i nostri componenti all'interno della pagina visualizzata, basterà aggiungerli al mostro app.component.html, e l'header e il footer saranno gli elementi fissi della nostra single page application. 
 
 Note: credo che il punto di questa sigla sia proprio il fatto che SPA intenda che effettivamente la pagina sia sempre la stessa ma cambino i componenti all'interno della pagina, e che ci siano invece delle componenti fisse che rimangono, come ad esempio la navbar e il footer.
+
+
+##### @Input 
+
+La notazone input serve per passare dati da un componente padre ad un componente figlio. Questo sarà possibile importanto @angular/core. 
+Si può utilizzare anche su una proprietà del componente figlio. 
+
+La determinata proprietà con quella notazione diverrà anche _accessibile_ (NB: accessibile è accessibile dal padre per essere scritta, passando al filgio dati) dal componente padre.
+
+ All'interno del componente padre si può usare un binding per associarsi alla proprietà del figlio. 
+
+
+
