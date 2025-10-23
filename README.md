@@ -429,7 +429,7 @@ Inietto quindi il servizio nel costruttore del componente e prendo dal servizio 
     imageUrl: ''
   };
 ```
-In questo modo creo una variabile articoli di tipo IArticoli che sarà una variabile di tipo Input inserendo i valori di default della classe. Andando a modificare poi l'html del componente padre grid-articoli.html possiamo visualizzare i dati usando l'ngFor, in questo modo: 
+In questo modo creo una variabile articoli di tipo IArticoli che sarà una variabile di tipo Input inserendo i valori di default della classe. Andando a modificare poi l'html del componente padre `grid-articoli.html` possiamo visualizzare i dati usando l'ngFor, in questo modo: 
 
 ```html
 
@@ -450,7 +450,18 @@ Quindi il componente padre creerà N-componenti figli predisposti per la visuali
       <div class="price mb-2">{{articolo.prezzo | currency:'EUR'}}</div> <!-- price.// -->
 ```
 
+#### @Output 
 
+E' stata creata per poter permettere azioni sul componente figlio che hanno conseguenze sul componente padre, in questo caso un esempio è la rimozione di una card ( un prodotto quindi ) dalla griglia prodotti.
+Output come Input è un decorator fornito da angular e crea un istanza del `EventEmitter`, la sua istanza viene osservata dal componente padre (observer). 
+
+```ts
+  @Output()
+  delete = new EventEmitter();
+  @Output()
+  edit = new EventEmitter();
+```
+In questo modo creo le due variabili output all'interno del componente figlio `articoli.card.ts`
 
 
 
