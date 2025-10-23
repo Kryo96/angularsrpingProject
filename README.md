@@ -257,10 +257,123 @@ Note: credo che il punto di questa sigla sia proprio il fatto che SPA intenda ch
 
 La notazone input serve per passare dati da un componente padre ad un componente figlio. Questo sarà possibile importanto @angular/core. 
 Si può utilizzare anche su una proprietà del componente figlio. 
-
 La determinata proprietà con quella notazione diverrà anche _accessibile_ (NB: accessibile è accessibile dal padre per essere scritta, passando al filgio dati) dal componente padre.
+All'interno del componente padre si può usare un binding per associarsi alla proprietà del figlio. 
 
- All'interno del componente padre si può usare un binding per associarsi alla proprietà del figlio. 
+Ad esempio qui nel nostro file welcome.component.html possiamo trovare:
+
+```html
+<app-jumbotron [Titolo]="titolo" [SottoTitolo]="sottotitolo" [Show]="false"></app-jumbotron>
+````
+
+ovvero il component welcome richiama le proprietà di app-jumbotron per scriverle come preferisce 
+
+Le proprietà:
+
+```ts
+export class JumbotronComponent {
+
+  @Input()
+  Titolo: string = "";
+  @Input()
+  SottoTitolo: string = "";
+  @Input()
+  Show: boolean = true;
+
+}
+````
+
+Con uso di annotation. Ovviamente in welcome.ts abbiamo anche la parte di codice dove sono effettivamente stati scritti questi dati 
+
+```ts
+export class WelcomeComponent implements OnInit {
+
+  utente : string = "";
+  titolo: string = "Benvenuti in Alphashop";
+  sottotitolo: string = "Visualizza le offerte del giorno";
+  constructor(private route : ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.utente = this.route.snapshot.params['userid'];
+  }
+}
+```
+
+##### Serivices Angular
+
+Un servizio è un tipo di classe che fornisce funzionalità, logica o dati condivisi da utilizzare in tutta l'applicazione. I servizi sono utilizzare per divide la logica di business e la gestione dei dati dai componenti, in modo da aumentare la granularità.
+
+Si possono creare servizi in angular è possibile usare l'angular cli o una classe TS con l'annotazione @Injecatable(), iniettarlo successivamente in altri servizi o componenti, inoltre l'istanza è singleton. 
+
+```ts
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthappService {
+
+  constructor() { }
+
+  autentica = (userid: string, password: string):boolean => {
+    return (userid === 'marco' && password === '123')?true: false; 
+  }
+}
+
+```
+
+##### Security 
+
+Utilizzando l'ActivatedRouteSnapshot e il RouterStateSnapshot, con un metodo canActivate ( che al suo interno avrà la logica necessaria per controllare se l'utente è loggato) all'interno di un servizio route-guard, possiamo "proteggere" e quindi mettere un guard sopra le rotte; in questo modo abbiamo la possibilità di attivare o meno delle rotte in base al return della nostra "guardia" 
+
+```ts 
+export class RouteGuardService {
+
+  constructor(private BasicAuth: AuthappService, private route: Router) { }
+
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+
+    if (!this.BasicAuth.isLogged()) {
+      console.log("Accesso NON Consentito");
+
+      this.route.navigate(['login']);
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+```
+
+canActivate infatti ritorna un boolean. Per invece esportare questa funzionalità del nostro servizio (DI), subito sotto avremo: 
+
+```ts
+export const AuthGuard: CanActivateFn = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
+  return inject(RouteGuardService).canActivate(next, state);
+}
+```
+
+Nel nostro app-routing.module.ts poi dovremo implementare questo AuthGuard, in questo modo, sulle route che vogliamo proteggere: 
+
+```ts
+const routes: Routes = [
+  {path:'', component: LoginComponent},
+  {path:'login', component: LoginComponent},
+  {path:'welcome', component: WelcomeComponent, canActivate:[AuthGuard]},
+  {path:'welcome/:userid', component: WelcomeComponent, canActivate:[AuthGuard]},
+  {path:'articoli', component : ArticoliComponent, canActivate:[AuthGuard]},
+  {path:'logout', component : LogoutComponent},
+  {path:'**', component: ErrorComponent},
+];
+```
+
+
+
+#### Elementi FE - card body 
+
+il body cart non è un qualcosa di nativo di angular ma è un elemento del FE che si può applicare a qualsiasi tipo di framework, e rappresenta una classe Bootstrap che serve per contenere il materiale principale di una card (scheda grafica), ad esempio in un sito di e-commerce la card di un prodotto è dopo una ricerca i prodotti visualizzati sono tutte card + card body
+
 
 
 
