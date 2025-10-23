@@ -415,6 +415,41 @@ nel componente padre che è appunto `articoli.grid.ts`
 
 Inietto quindi il servizio nel costruttore del componente e prendo dal servizio gli articoli mockati. Ora, non mi resta che passarli al componente figlio, articoli.card.ts.
 
+```ts
+ @Input()
+  articolo: IArticoli  = {
+    codart: '',
+    descrizione: '',
+    um: '',
+    pzcart: 0,
+    peso: 0,
+    prezzo: 0,
+    active: true,
+    data: new Date(),
+    imageUrl: ''
+  };
+```
+In questo modo creo una variabile articoli di tipo IArticoli che sarà una variabile di tipo Input inserendo i valori di default della classe. Andando a modificare poi l'html del componente padre grid-articoli.html possiamo visualizzare i dati usando l'ngFor, in questo modo: 
+
+```html
+
+      <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5" *ngIf="articoli$">
+        <app-articoli-card
+        *ngFor="let articolo of articoli$"
+        [articolo] = "articolo"
+        ></app-articoli-card>
+      </div>
+```
+
+Quindi il componente padre creerà N-componenti figli predisposti per la visualizzazione, che in questo caso sono le card. Per visualizzare i dati dinamici e corretti delle card dovremo poi referenziare le variabili passate dal componente padre, nel file html `articoli-card.html` in questo modo: 
+
+```html
+ <a href="#" class="img-wrap"> <img src="{{articolo.imageUrl}}" class="img-rounded"  width="180" height="225" alt="Product"> </a>
+    <div class="info-wrap">
+      <a href="#" class="title text-truncate">{{articolo.descrizione}}</a>
+      <div class="price mb-2">{{articolo.prezzo | currency:'EUR'}}</div> <!-- price.// -->
+```
+
 
 
 
