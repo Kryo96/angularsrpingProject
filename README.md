@@ -322,6 +322,54 @@ export class AuthappService {
 
 ```
 
+##### Security 
+
+Utilizzando l'ActivatedRouteSnapshot e il RouterStateSnapshot, con un metodo canActivate ( che al suo interno avrà la logica necessaria per controllare se l'utente è loggato) all'interno di un servizio route-guard, possiamo "proteggere" e quindi mettere un guard sopra le rotte; in questo modo abbiamo la possibilità di attivare o meno delle rotte in base al return della nostra "guardia" 
+
+```ts 
+export class RouteGuardService {
+
+  constructor(private BasicAuth: AuthappService, private route: Router) { }
+
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+
+    if (!this.BasicAuth.isLogged()) {
+      console.log("Accesso NON Consentito");
+
+      this.route.navigate(['login']);
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+```
+
+canActivate infatti ritorna un boolean. Per invece esportare questa funzionalità del nostro servizio (DI), subito sotto avremo: 
+
+```ts
+export const AuthGuard: CanActivateFn = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
+  return inject(RouteGuardService).canActivate(next, state);
+}
+```
+
+Nel nostro app-routing.module.ts poi dovremo implementare questo AuthGuard, in questo modo, sulle route che vogliamo proteggere: 
+
+```ts
+const routes: Routes = [
+  {path:'', component: LoginComponent},
+  {path:'login', component: LoginComponent},
+  {path:'welcome', component: WelcomeComponent, canActivate:[AuthGuard]},
+  {path:'welcome/:userid', component: WelcomeComponent, canActivate:[AuthGuard]},
+  {path:'articoli', component : ArticoliComponent, canActivate:[AuthGuard]},
+  {path:'logout', component : LogoutComponent},
+  {path:'**', component: ErrorComponent},
+];
+```
+
+
+
 #### Elementi FE - card body 
 
 il body cart non è un qualcosa di nativo di angular ma è un elemento del FE che si può applicare a qualsiasi tipo di framework, e rappresenta una classe Bootstrap che serve per contenere il materiale principale di una card (scheda grafica), ad esempio in un sito di e-commerce la card di un prodotto è dopo una ricerca i prodotti visualizzati sono tutte card + card body
