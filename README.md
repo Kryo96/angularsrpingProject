@@ -460,8 +460,35 @@ Output come Input è un decorator fornito da angular e crea un istanza del `Even
   delete = new EventEmitter();
   @Output()
   edit = new EventEmitter();
+
+  editArt = () =>  this.edit.emit(this.articolo.codart);
+  delArt = () => this.delete.emit(this.articolo.codart);
 ```
-In questo modo creo le due variabili output all'interno del componente figlio `articoli.card.ts`
+In questo modo creo le due variabili output all'interno del componente figlio `articoli.card.ts` ed "emetto" l'evento, e quindi lo espongo, con il metodo `.emit()` , allo stesso modo andrà anche aggiornato `grid-articoli.html` dovrà andrà inserito il riferimento all'handler degli eventi appena definiti nel componente figlio. 
+
+```html
+ <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5" *ngIf="articoli$">
+        <app-articoli-card
+        *ngFor="let articolo of articoli$"
+        [articolo] = "articolo"
+        (delete) = "handleDelete($event)"
+        (edit) = "handleEdit($event)"
+        ></app-articoli-card>
+      </div>
+```
+
+E ovviamente anche l'html del componente figlio (ovvero `articoli-card.html`) dev'essere cambiato con i bottoni che "puntano" agli eventi definiti come `delete()` e `edit()`
+
+```html
+<button href="#" class="btn btn-sm btn-light" (click)="editArt()">
+        <i class="material-icons md-edit"></i>Modifica
+      </button>
+      <button href="#" class="btn btn-sm btn-outline-danger" (click)="delArt()">
+          <i class="material-icons md-delete_forever"></i>Elimina
+      </button>
+```
+
+
 
 
 
