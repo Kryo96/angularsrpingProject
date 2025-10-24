@@ -546,9 +546,9 @@ Un esempio pratico potrebbe essere questo:
     console.log(QtaArt);
   }
 ```
-receivedValue serve solo a far vedere il dato mandato dal figlio, ma non centra con il viewChild
-4. Aggiungamo il riferimento del viewChild in `grid-articoli.html` con la notazione #nome 
+receivedValue serve solo a far vedere il dato mandato dal figlio, ma non centra con il viewChild.
 
+4. Aggiungamo il riferimento del viewChild in `grid-articoli.html` con la notazione #nome 
 ```html
 <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5" *ngIf="articoli$">
         <app-articoli-card
