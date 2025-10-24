@@ -509,4 +509,56 @@ Un'altra annotazione angular che ci permette di accedere ad un elemento figlio a
 per poi referenziarlo nel file html andrà usato `#nome`. 
 
 Un esempio pratico potrebbe essere questo: 
+1. Definiamo una terza variabile sendValue in `articoli-card.ts` che andrà ad inviare il quantitativo prodotto che si desidera acquistare
+
+```ts
+ @Output()
+  sendValue = new EventEmitter<number>();
+
+  qtaArt : number = 0;
+
+  editArt = () =>  this.edit.emit(this.articolo);
+  delArt = () => this.delete.emit(this.articolo);
+  getValue = () => this.sendValue.emit(this.qtaArt);
+```
+2. Utilizzando l'ngModel per definire e agganciare la variabile quantità nel `articoli-card.html`
+   
+```html
+<div class="price mb-2">
+        {{articolo.prezzo | currency:'EUR'}} X
+        <input type="text" class="qta mb-2" id="qta" [(ngModel)] = "qtaArt" />
+      </div> <!-- price.// -->
+```
+3. in `grid-articoli.ts` andiamo ad aggiungere la variabile child di tipo any con alias 'GridView' che si riferisce ad `articoli$`(elemento del componente figlio card), e successivamente andiamo ad aggiungere nel metodo `handleEdit()` il metodo `getValue()` del componente figlio
+
+```ts
+  ViewChild('GridView') child : any;
+  articoli$ : IArticoli[] = [];
+  .
+  .
+  handleEdit = (articolo : IArticoli) => {
+    console.log("Cliccato tasto modifica del codice " + articolo.codart);
+    this.child.getValue();
+  }
+  .
+  .
+ receivedValue = (QtaArt: number) => {
+    console.log(QtaArt);
+  }
+```
+receivedValue serve solo a far vedere il dato mandato dal figlio, ma non centra con il viewChild
+4. Aggiungamo il riferimento del viewChild in `grid-articoli.html` con la notazione #nome 
+
+```html
+<div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5" *ngIf="articoli$">
+        <app-articoli-card
+        #GridView
+        *ngFor="let articolo of articoli$"
+        [articolo-card] = "articolo"
+        (elimina-card) = "handleDelete($event)"
+        (edit) = "handleEdit($event)"
+        (sendValue)="receivedValue($event)"
+        ></app-articoli-card>
+      </div>
+```
 
