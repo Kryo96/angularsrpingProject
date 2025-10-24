@@ -488,7 +488,25 @@ E ovviamente anche l'html del componente figlio (ovvero `articoli-card.html`) de
       </button>
 ```
 
+##### NB Output
+Per restituire l'intera classe invece che solo una variabile di Articoli basta fare: 
+```ts
+@Output(`elimina-card`) #alias
+  delete = new EventEmitter<IArticoli>();
+  @Output(`edit-card`) #alias
+  edit = new EventEmitter<IArticoli>();
+```
 
+#### @ViewChild
 
+Un'altra annotazione angular che ci permette di accedere ad un elemento figlio all'interno di un componente padre. Si può quindi ottenere un riferimento ad un elemento specifico all'interno del componente figlio. E' inoltre possibile specificare un selettore opzionale per ottenere un elemento specifico all'interno del componente figlio utilizzando la seguente sintassi: 
 
+```ts
+  @ViewChild(NomeComponente, {static: false, read: TipoElemento})
+  nomeElemento: TipoElemento;
+```
+
+per poi referenziarlo nel file html andrà usato `#nome`. 
+
+Un esempio pratico potrebbe essere questo: 
 
