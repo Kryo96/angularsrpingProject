@@ -562,3 +562,18 @@ receivedValue serve solo a far vedere il dato mandato dal figlio, ma non centra 
       </div>
 ```
 
+#### @Ng-content
+
+La direttiva ng-content serve per consentire passaggi di contenuti dinamici da un componente padre ad un componente figlio, permettendo di inserire il contenuto direttamente nel template del figlio. Che può essere testo, html, imgs, o altro. Per poter utilizzare questa direttiva bisogna per prima cosa 
+1. Definire una posizione all'interno del template del componente figlio, che verrà creata tramite tag `<ng-content></ng-content>`
+2. Nel componente padre andrà definita una posizione con il tag `<nome-componente-figlio></nome-componente-figlio>`
+
+E' possibile utilizzare questa direttiva insieme ad altre direttive angular per rendere davvero dinamici gli elementi visualizzati, un esempio potrebbe essere la visualizzazione di un elemento nel template solo se si soddisfa una determinata proprietà. In questo caso il prodotto deve avere `active` a `true`: 
+
+```html
+  <span class= "badge rounded-pill text-bg-danger stato promo` *ngIf="articolo.active">Promo</span>
+```
+Questo elemento che troviamo all'interno di `grid-articoli.html`, ovvero il componente padre, mostra un badge all'interno del componente figlio, che compare solo se active è a true. 
+
+
+
