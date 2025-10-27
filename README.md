@@ -585,6 +585,97 @@ Ogni fase del ciclo di vita di un componente offre la possibilità di eseguire c
 - ngOnviewInit: viene chiamato dopo che la vista del componente è stata inizializzata. E' utile per eseguire operazioni con il DOM, ad esempio per ottenere un riferimento di alcuni suoi elementi.
 - ngOnDestroy: viene chiamato prima di distruggere un componente. E' utgile per pulire o annullare observing su eventi.
 
+#### Introduzione direttive personalizzate
+
+Componenti fondamentali per la realizzazione di applicazioni web, sono utilizzarte per estendere i comportamenti del DOM e fornire funzionalità aggiuntive. Possono essere usate per creare funzionalità complesse, controllare la validazione dei dati, manipolare il DOM e molto altro. Sono flessibili e potenti. Si suddividono in due macro aeree:
+
+1. Direttive attributo: vengono applicate ad elementi html come attributi, e possono aggiungere o modificare comportamenti e aspetto degli elementi, non alterandone però la struttura. (ad esempio è possibile creare una direttiva per validare la lunghezza min max di un input di testo, o il suo formato)
+2. Direttive strutturali: vengono utilizzate per modificare la struttura del DOM, possono aggiungere o rimuovere elementi html in base a delle condizioni. Come ad esempio l' `*ngIf`.+
+
+#### Creazione direttive personalizzate 
+
+Per creare una direttiva personalizzata è necessario definire una classe `TypeScript` che implementa l'interfaccia `Directive`. La classe può contenere metodi e proprietà, inoltre è possibile configurare la direttiva con notazioni come `selector` per specificare come e dove applicare la direttiva, e `inputs` per ricevere dati dall'esterno. 
+Una volta definita la direttiva si può utilizzare all'interno del template html, applicandolo ad un elemento con attributo `nome-direttiva` nel template, un esempio: 
+
+```html
+<span appHighlight> Testo da evidenziare </span>
+```
+
+La classe invece sarà simile a qualcosa del genere: 
+
+```ts
+  @Directive({
+    selector: '[appHighlight]'
+  })
+  export class ColorChangeDirective implements OnInit {
+  
+    constructor(private el: ElementRef, private renderer: Renderer2) { }
+  
+  }
+```
+Costruttore con 2 parametri di cui il primo è l'elemento a cui fa riferimento, ma il secondo? 
+
+#### Introduzione al Renderer2 
+
+Renderer2 è una classe fornita da angular che provvede un'API per manipolare il DOM in modo sicuro e consistente indipendentemente dal fatto che l'applicazione sia eseguita lato server o lato client, il Renderer2 agisce sul DOM effettivo nel caso l'applicazione sia lato client e invece agisce agisce su un DOM virtuale se l'applicazione è lato server, in ogni caso verrà gestito senza interruzioni. Inoltre tra le altre cose previene attacchi XSS e vulnerabilità simili. 
+
+Inoltre si possono arriccchire le direttive con i decorator @Input, @HostListener e @HostBinding (credo ce ne siano molte altre) 
+
+```ts
+ @Input()
+  backColor: string = "transparent";
+  @Input()
+  textColor: string = "red";
+
+  @HostBinding('style.backgroundColor')
+  backgroundColor: string = this.backColor;
+
+  @HostListener('mouseenter') mouseover(eventData: Event) {
+    this.backgroundColor = "darkorange";
+  }
+
+  @HostListener('mouseleave') mouseleave(eventData: Event) {
+    this.backgroundColor = this.backColor;
+  }
+
+  ngOnInit(): void {
+    this.applyStyles();
+  }
+
+  applyStyles() {
+    this.backgroundColor = this.backColor;
+   // this.renderer.setStyle(this.el.nativeElement, 'background-color', this.backColor);
+    this.renderer.setStyle(this.el.nativeElement, 'color', this.textColor);
+  }
+```
+
+Come si può vedere in questo esempio per rendere ancora più dinamica la nostra direttiva, abbiamo anche degli handler di mouse overing, nel template html invece avremo 
+
+```html
+        <p appColorChange [backColor]="'#dc143c	'" [textColor]="'Blue'">Promo Valida sino al 12/11/2023</p>
+```
+La nostra direttiva custom al momento si trova in shared, che è un componente condiviso da tutti, ma dovrà essere prima esportato all'interno di `shared.module.ts`
+
+```ts
+  exports: [
+    ColorChangeDirective
+  ]
+```
+in questo mdoo, e successivamente aggiunto alla lista degli input di `articoli.module.ts`
+
+```ts
+  imports: [
+    CommonModule,
+    CoreModule,
+    FormsModule,
+    SharedModule
+  ]
+```
+
+
+
+
+
 
 
 
