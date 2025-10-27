@@ -575,5 +575,16 @@ E' possibile utilizzare questa direttiva insieme ad altre direttive angular per 
 ```
 Questo elemento che troviamo all'interno di `grid-articoli.html`, ovvero il componente padre, mostra un badge all'interno del componente figlio, che compare solo se active è a true. 
 
+#### Ciclo di vita componenti angular
+
+Ogni fase del ciclo di vita di un componente offre la possibilità di eseguire codice custom su quella fase, il ciclo è rappresentato da una serie di `hook` che possono essere implementati all'interno di un componente. 
+
+- ngOnChanges: Questo hook viene chiamato quando uno o più input del componente cambiano. Viene eseguito prima del ngOnInit.
+- ngOnInit: Questo hook viene chiamato una volta che il componente è stato inizializzato. E' solitamente usato per inizializzare variabili e recuperare servizi esterni.
+- ngDoCheck: viene chiamato quando angular verifica se ci sono cambiamenti da rilevare nel componente. E' utile per eseguire operazioni di pulizia o per verificare se ci sono cambiamenti non rilevati da angular.
+- ngOnviewInit: viene chiamato dopo che la vista del componente è stata inizializzata. E' utile per eseguire operazioni con il DOM, ad esempio per ottenere un riferimento di alcuni suoi elementi.
+- ngOnDestroy: viene chiamato prima di distruggere un componente. E' utgile per pulire o annullare observing su eventi.
+
+
 
 
