@@ -672,10 +672,40 @@ in questo mdoo, e successivamente aggiunto alla lista degli input di `articoli.m
   ]
 ```
 
+##### Observable - RxJS
 
+Anche in angular si usa l'observable, e fornisce una quantità di operatori per manipolare i dati emessi. E inoltre gestirne gli errori. 
+Con RxJS possiamo: 
+- implementare il pattern observable, inoltre rxjs si basa su un tipo di programmazione reattiva, che permette di scrivere codice in modo reattivo ai cambiamenti dei dati
+- gestione dei dati asincroni come le chiamate http alle API, le richieste stesse possono essere trasformate in observable.
+- programmazione dichiarativa: rxjs la favorisce, utilizzando operatori funzionali, rendendo il codice facile da leggere
+- offre un modo elegante per gestire i flussi di dati asincroni
 
+##### Metodi di RxJS
+- of() : opeatore che permette di creare un observable
+- map() : operatore utilizzato per trasformare i dati emessi da un observable
 
+Esempio: nel nostro progetto vogliamo implementare tramite RxJS un sistema migliore per far si che l'utenta acceda a determinate route solo se loggato nell'applicazione web, per fare questo nel nostro file `route-guard.service.ts` dobbiamo aggiungere un queryParam alla riga `this.route.navigate([`login`], {queryParams: {nologged:true}})` in questo modo. 
 
+Nel nostro file di login invece: 
 
+```ts
+nologged : boolean = false; 
+filter$ Observable<String | null> = of("");
+```
+dichiariamo una variabile di tipo observable di nome filter e una variabile nologged di tipo boolean. 
+
+```ts
+ngOnInit(): void {
+  this.filter$ = this.activeRoute.queryParamMap.pipe(
+  map((params: ParamMap) => params.get(`nologged`)),
+);
+
+this.filter$.subscribe(param => (param) ? this.nologged = true : this.notlogged = false); 
+}
+```
+nel nostro ngOnInit, assegamo alla nostra variabile osservabile il nuovo valore della queryParam `nologged` della route attivata in quell'istante. L'oggetto emesso dalla queryParamMap è di tipo ParamMap, con .pipe(map()) estraiamo il dato che ci serve. 
+
+Successivamente effetuiamo anche il metodo `subscribe()` sul nostro observable e questo ci permette di eseguire la funzione all'interno di subscribe ogni volta che il valore dell observable cambia. 
 
 
